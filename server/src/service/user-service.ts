@@ -10,7 +10,7 @@ import { TokenT } from "../types/registration";
 class UserService {
   async registration(
     email: string,
-    password: string
+    password: string,
   ): Promise<({ user: DtoServiceT } & TokenT) | null> {
     const candidate = await UserModel.findOne({ email });
     if (candidate) {
@@ -29,7 +29,7 @@ class UserService {
     try {
       await MailService.sendActivationMail(
         email,
-        `${process.env.API_URL}/api/active/${activationLink}`
+        `${process.env.API_URL}/api/active/${activationLink}`,
       );
       const userDto = new DtoService({
         _id: user._id.toString(),
@@ -39,7 +39,9 @@ class UserService {
 
       const tokens = TokenService.generateTokens({ ...userDto });
       if (!tokens) {
-        throw new Error("WARNING: Error while generating access and refresh tokens");
+        throw new Error(
+          "WARNING: Error while generating access and refresh tokens",
+        );
       }
 
       await TokenService.saveToken(userDto.id, tokens.refreshToken);
@@ -51,9 +53,17 @@ class UserService {
     }
   }
 
+  async active(activationLink: string) {
+    const user = await UserModel.findOne({ activationLink });
+
+    if (!user) {
+      throw new Error("Не корректная ссылка активации");
+    }
+    user.isActivated = true;
+    await user.save();
+  }
   async login() {}
   async logout() {}
-  async active() {}
   async refresh() {}
   async getUsers() {}
 }

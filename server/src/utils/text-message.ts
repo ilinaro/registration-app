@@ -9,6 +9,6 @@ export enum ErrorMessages {
 }
 
 export enum OptionsMessages {
-  ACTIVATE_MAIL = "Активация аккаунта на ", 
-  MESSAGE_EMAIL = "Для активации перейдите по ссылке"
+  ACTIVATE_MAIL = "Активация аккаунта на ",
+  MESSAGE_EMAIL = "Для активации перейдите по ссылке",
 }

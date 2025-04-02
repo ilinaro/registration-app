@@ -9,7 +9,7 @@ class TokenService {
       !process.env.JWT_ACCESS_SECRET_KEY ||
       !process.env.JWT_REFRESH_SECRET_KEY
     ) {
-      return null
+      return null;
     }
 
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET_KEY, {

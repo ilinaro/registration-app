@@ -14,7 +14,7 @@ app.use(
   cors({
     credentials: true,
     origin: process.env.CLIENT_URL,
-  })
+  }),
 );
 app.use("/api", router);
 
@@ -25,12 +25,12 @@ const start = async () => {
     const DB_URL = process.env.DB_URL;
     if (!DB_URL) {
       throw new Error(
-        "WARNING: DB_URL is not defined in environment variables"
+        "WARNING: DB_URL is not defined in environment variables",
       );
     }
     await mongoose.connect(DB_URL);
     app.listen(PORT, () =>
-      console.log(`SUCCESS: Server started on port ${PORT}`)
+      console.log(`SUCCESS: Server started on port ${PORT}`),
     );
   } catch (e) {
     mongoose.connection.on("error", (err) => {

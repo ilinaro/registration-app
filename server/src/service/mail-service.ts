@@ -13,22 +13,22 @@ class MailService {
   constructor() {
     this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT), 
+      port: Number(process.env.SMTP_PORT),
       secure: false,
       auth: {
-        user: process.env.SMTP_USER, 
-        pass: process.env.SMPT_PASSWORD 
+        user: process.env.SMTP_USER,
+        pass: process.env.SMPT_PASSWORD,
       },
     } as nodemailer.SendMailOptions);
   }
   async sendActivationMail(toEmail: string, link: string) {
     try {
-        await this.transporter.sendMail({
-          from: process.env.SMTP_USER,
-          to: toEmail,
-          subject: `${OptionsMessages.ACTIVATE_MAIL} - ${process.env.API_URL}`,
-          text: "",
-          html: `
+      await this.transporter.sendMail({
+        from: process.env.SMTP_USER,
+        to: toEmail,
+        subject: `${OptionsMessages.ACTIVATE_MAIL} - ${process.env.API_URL}`,
+        text: "",
+        html: `
             <div style="font-family: Arial, sans-serif; padding: 20px; margin: 0;">
               <div style="max-width: 800px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden;">
                 <div style="background-color: #4a90e2; color: #ffffff; padding: 20px; text-align: center;">
@@ -44,10 +44,10 @@ class MailService {
               </div>
             </div>
           `,
-        });
-      } catch (e) {
-        console.error("WARNING:", e);
-      }
+      });
+    } catch (e) {
+      console.error("WARNING:", e);
+    }
   }
 }
 

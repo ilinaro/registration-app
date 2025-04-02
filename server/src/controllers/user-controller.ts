@@ -6,7 +6,7 @@ class UserController {
   async registration(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> {
     try {
       const { email, password } = req.body;

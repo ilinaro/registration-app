@@ -1,5 +1,5 @@
 export interface DtoModelT {
-    _id: string;
-    email: string;
-    isActivated: boolean;
+  _id: string;
+  email: string;
+  isActivated: boolean;
 }
