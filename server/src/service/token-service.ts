@@ -1,17 +1,9 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 import TokenModel from "../models/token-model";
-dotenv.config();
+import { logger } from "../utils/logger";
 
 class TokenService {
   generateTokens(payload: string | Buffer | object) {
-    if (
-      !process.env.JWT_ACCESS_SECRET_KEY ||
-      !process.env.JWT_REFRESH_SECRET_KEY
-    ) {
-      return null;
-    }
-
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET_KEY, {
       expiresIn: "30m",
     });
@@ -29,6 +21,34 @@ class TokenService {
     }
     const token = await TokenModel.create({ user: userId, refreshToken });
     return token;
+  }
+
+  validateAccessToken(token: string) {
+    try {
+      const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET_KEY);
+      return userData;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  validateRefreshToken(token: string) {
+    try {
+      const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET_KEY);
+      return userData;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async removeToken(refreshToken: string) {
+    const tokenData = await TokenModel.deleteOne({ refreshToken });
+    return tokenData;
+  }
+
+  async findToken(refreshToken: string) {
+    const tokenData = await TokenModel.findOne({ refreshToken });
+    return tokenData;
   }
 }
 

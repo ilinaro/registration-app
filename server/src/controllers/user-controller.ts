@@ -1,33 +1,26 @@
 import { Request, Response, NextFunction } from "express";
 import { ErrorMessages } from "../utils/text-message";
 import UserService from "../service/user-service";
-
+import { logger } from "../utils/logger";
+import { validationResult } from "express-validator";
+import ApiError from "../exceptions/api-error";
 class UserController {
   async registration(
     req: Request,
     res: Response,
-    next: NextFunction,
+    next: NextFunction
   ): Promise<void> {
     try {
-      const { email, password } = req.body;
-      if (!email || !password) {
-        console.error(
-          "WARNING: ",
-          ErrorMessages.WRONG_PASS_OR_EMAIL,
-          password,
-          email,
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        next(
+          ApiError.BadRequest(ErrorMessages.WRONG_PASS_OR_EMAIL, errors.array())
         );
-        res.status(400).json({ message: ErrorMessages.WRONG_PASS_OR_EMAIL });
-        return;
       }
-
+      const { email, password } = req.body;
       const userData = await UserService.registration(email, password);
 
-      if (!userData) {
-        console.error(ErrorMessages.USER_NOT_FOUND);
-        res.status(400).json({ message: ErrorMessages.USER_NOT_FOUND });
-        return;
-      }
+      if (!userData) return;
 
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -36,49 +29,75 @@ class UserController {
       res.json(userData);
       return;
     } catch (e) {
-      console.error(ErrorMessages.REGISTRATION_FAILED, e);
-      res.status(500).json({ message: ErrorMessages.REGISTRATION_FAILED });
+      logger.error("catch on registration", e);
+      next(e);
     }
   }
 
   async login(req: Request, res: Response, next: NextFunction) {
     try {
-      res.json({ message: "Login endpoint" });
+      const { email, password } = req.body;
+      const userData = await UserService.login(email, password);
+      if (!userData) return;
+      res.cookie("refreshToken", userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      res.json(userData);
+      return;
     } catch (e) {
-      console.error(e);
+      logger.error("catch on login", e);
+      next(e);
     }
   }
 
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      res.json({ message: "Logout endpoint" });
+      const { refreshToken } = req.cookies;
+      const token = UserService.logout(refreshToken);
+      res.json(token);
+      return;
     } catch (e) {
-      console.error(e);
+      logger.error("catch on logout", e);
+      next(e);
     }
   }
 
   async active(req: Request, res: Response, next: NextFunction) {
     try {
-      res.json({ message: "Active endpoint" });
+      const activationLink = req.params.link;
+      await UserService.active(activationLink);
+      return res.redirect(process.env.CLIENT_URL);
     } catch (e) {
-      console.error(e);
+      logger.error("catch on active", e);
+      next(e);
     }
   }
 
   async refresh(req: Request, res: Response, next: NextFunction) {
     try {
-      res.json({ message: "Refresh endpoint" });
+      const { refreshToken } = req.cookies;
+      const userData = await UserService.refresh(refreshToken);
+      if (!userData) return;
+      res.cookie("refreshToken", userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      res.json(userData);
     } catch (e) {
-      console.error(e);
+      logger.error("catch on refresh", e);
+      next(e);
     }
   }
 
   async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      res.json({ users: [123] });
+      const users = await UserService.getAllUsers();
+      res.json(users);
+      return;
     } catch (e) {
-      console.error(e);
-      res.status(500).json({ message: "Failed to fetch users" });
+      logger.error("catch on getUsers", e);
+      next(e);
     }
   }
 }

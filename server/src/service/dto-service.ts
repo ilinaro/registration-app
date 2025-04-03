@@ -1,21 +1,14 @@
-import { DtoModelT } from "../types/dto";
-
-export interface DtoServiceT {
-  id: string;
-  email: string;
-  isActivated: boolean;
-}
-
 class DtoService {
   id: string;
   email: string;
   isActivated: boolean;
 
-  constructor(model: DtoModelT) {
-    this.id = model._id;
-    this.email = model.email;
-    this.isActivated = model.isActivated;
+
+  constructor({...user}) {
+    this.id = user._id;
+    this.email = user.email;
+    this.isActivated = user.isActivated;
   }
 }
 
-export default DtoService as new (model: DtoModelT) => DtoServiceT;
+export default DtoService;

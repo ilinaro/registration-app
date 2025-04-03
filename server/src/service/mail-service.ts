@@ -1,8 +1,7 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { OptionsMessages } from "../utils/text-message";
-dotenv.config();
+import { logger } from "../utils/logger";
 
 class MailService {
   transporter: nodemailer.Transporter<
@@ -17,9 +16,9 @@ class MailService {
       secure: false,
       auth: {
         user: process.env.SMTP_USER,
-        pass: process.env.SMPT_PASSWORD,
+        pass: process.env.SMTP_PASSWORD,
       },
-    } as nodemailer.SendMailOptions);
+    } as SMTPTransport.Options);
   }
   async sendActivationMail(toEmail: string, link: string) {
     try {
@@ -46,7 +45,8 @@ class MailService {
           `,
       });
     } catch (e) {
-      console.error("WARNING:", e);
+      console.log(this.transporter)
+      logger.error("Send Activation Mail:", e);
     }
   }
 }
