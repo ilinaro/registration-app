@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { logger } from "../utils/logger";
 import ApiError from "../exceptions/api-error";
 import { ErrorMessages } from "../utils/text-message";
 

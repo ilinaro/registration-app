@@ -32,7 +32,7 @@ class UserService {
       `${process.env.API_URL}/api/active/${activationLink}`
     );
     const userDto = new DtoService(user);
-    const tokens = TokenService.generateTokens({ ...userDto });
+    const tokens = TokenService.generateTokens(userDto);
     await TokenService.saveToken(userDto.id, tokens.refreshToken);
     return { user: userDto, ...tokens };
   }
@@ -77,10 +77,8 @@ class UserService {
     if (!userData || !tokenFromDb) {
       throw ApiError.UnauthorizedError();
     }
-    // const user = await UserModel.findById(userData.id); 
-    const user = await UserModel.findById(userData);
+    const user = await UserModel.findById((userData as DtoService).id);
 
-    // const userDto = new DtoService(user);
     const userDto = new DtoService({user});
 
     const tokens = TokenService.generateTokens({ ...userDto });
