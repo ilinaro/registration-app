@@ -100,11 +100,11 @@ registration-app/
 ### Запуск в режиме разработки
 ```bash
 cd client
-npm run dev
+npm run dev:client
 ```
 
 ### Доступные скрипты
-- `npm run dev` - запуск dev-сервера
+- `npm run dev:server` - запуск dev-сервера
 - `npm run build` - сборка проекта
 - `npm run preview` - предпросмотр собранного проекта
 - `npm run lint` - проверка кода ESLint
@@ -127,11 +127,11 @@ npm run dev
 ### Запуск в режиме разработки
 ```bash
 cd server
-npm run dev
+npm run dev:server
 ```
 
 ### Доступные скрипты
-- `npm run dev` - запуск сервера с nodemon для авто-перезагрузки
+- `npm run dev:server` - запуск сервера с nodemon для авто-перезагрузки
 - `npm run build` - компиляция TypeScript
 - `npm run start` - запуск скомпилированного сервера
 - `npm run lint` - проверка кода ESLint
