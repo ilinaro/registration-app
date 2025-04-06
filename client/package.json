@@ -10,7 +10,6 @@
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,tsx,scss,json}\"",
     "check": "prettier --check \"src/**/*.{ts,tsx,scss,json}\"",
-    "prepare": "husky",
     "stylelint": "stylelint \"src/**/*.{scss,module.scss}\" --fix",
     "stylelint:check": "stylelint \"src/**/*.{scss,module.scss}\""
   },
@@ -34,7 +33,6 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
-    "husky": "^9.1.7",
     "prettier": "^3.5.3",
     "sass": "^1.86.0",
     "stylelint": "^16.16.0",
