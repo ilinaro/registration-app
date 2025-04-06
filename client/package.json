@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev:client": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -13,11 +13,6 @@
     "prepare": "husky",
     "stylelint": "stylelint \"src/**/*.{scss,module.scss}\" --fix",
     "stylelint:check": "stylelint \"src/**/*.{scss,module.scss}\""
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run format && npm run check"
-    }
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.1",
