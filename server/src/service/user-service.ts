@@ -7,12 +7,10 @@ import TokenService from "./token-service";
 import DtoService from "./dto-service";
 import { TokenT } from "../types/registration";
 import ApiError from "../exceptions/api-error";
+import { logger } from "../utils/logger";
 
 class UserService {
-  async registration(
-    email: string,
-    password: string,
-  ): Promise<({ user: DtoService } & TokenT) | null> {
+  async registration(email: string, password: string) {
     const candidate = await UserModel.findOne({ email });
     if (candidate) {
       throw ApiError.BadRequest(ErrorMessages.EMAIL_EXISTS);
@@ -29,12 +27,12 @@ class UserService {
 
     await MailService.sendActivationMail(
       email,
-      `${process.env.API_URL}/api/active/${activationLink}`,
+      `${process.env.API_URL}/api/active/${activationLink}`
     );
     const userDto = new DtoService(user);
-    const tokens = TokenService.generateTokens(userDto);
+    const tokens = TokenService.generateTokens({ ...userDto });
     await TokenService.saveToken(userDto.id, tokens.refreshToken);
-    return { user: userDto, ...tokens };
+    return { ...tokens, user: userDto };
   }
 
   async active(activationLink: string) {

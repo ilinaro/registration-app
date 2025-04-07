@@ -1,9 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from "./counterSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import authStateReducer from './authStateSlice';
+import deviceTypeReducer from './deviceTypeSlice';
 
-export const store = configureStore({
+const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    authState: authStateReducer,
+    isMobile: deviceTypeReducer,
   },
 });
 

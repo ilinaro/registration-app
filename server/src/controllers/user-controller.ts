@@ -21,10 +21,10 @@ class UserController {
         );
       }
       const { email, password } = req.body;
+      
       const userData = await UserService.registration(email, password);
 
       if (!userData) return;
-
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
@@ -40,7 +40,9 @@ class UserController {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
+
       const userData = await UserService.login(email, password);
+      
       if (!userData) return;
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -58,6 +60,10 @@ class UserController {
     try {
       const { refreshToken } = req.cookies;
       const token = UserService.logout(refreshToken);
+      res.cookie('refreshToken', '', {
+        httpOnly: true,
+        expires: new Date(0),
+      });
       res.json(token);
       return;
     } catch (e) {

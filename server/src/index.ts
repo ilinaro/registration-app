@@ -15,7 +15,9 @@ app.use(
   cors({
     credentials: true,
     origin: process.env.CLIENT_URL,
-  }),
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  })
 );
 app.use("/api", router);
 app.use(errorMiddleware);
